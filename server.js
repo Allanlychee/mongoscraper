@@ -1,0 +1,6 @@
+var express = require('express')
+var hbs = require('express-handlebars')
+var mongoose = require('mongoose')
+var bodyParser = require('body-parser')
+var cheerio = require('cheerio')
+var request = require('request')
