@@ -1,7 +1,7 @@
 // require mongoose
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 // save constructor
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 // make a new schema
 var ArticleSchema = new Schema ({
     title: {
@@ -20,7 +20,7 @@ var ArticleSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: "Note"
     }
-});
+})
 
-var Article = mongoose.model("Article", ArticleSchema);
-module.exports = Article;
+var Article = mongoose.model("Article", ArticleSchema)
+module.exports = Article
