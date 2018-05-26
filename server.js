@@ -41,8 +41,6 @@ mongoose
 // require("./routes/html-routes.js")(app)
 require("./routes/api-routes.js")(app)
 
-
-
 // listen
 app.listen(PORT, function () {
   console.log("App is listening on port: " + PORT);
