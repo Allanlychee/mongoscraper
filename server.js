@@ -1,48 +1,49 @@
-// Dependencies
+// require packages
+var mongoose = require("mongoose");
 var express = require("express");
 var bodyParser = require("body-parser");
-var mongoose = require("mongoose");
-var path = require('path')
-
-// Initialize Express
+var hbars = require("express-handlebars");
+var cheerio = require("cheerio");
+var request = require("request");
+// require models
+var db = require("./models");
+// instantiate app
+var PORT = process.env.PORT || 3000;
 var app = express();
-// app.use(logger("dev"));
+// configure middleware
+app.use(express.static("public"));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }));
-app.use(bodyParser.json())
-app.use(express.static("./public"));
-// Routes
-require("./routes/html-routes.js")(app)
-require("./routes/api-routes.js")(app)
+app.use(bodyParser.text());
+app.use(bodyParser.json({
+  type: "application/vnd.api+json"
+}));
 
-// Set mongoose to leverage built in JavaScript ES6 Promises
-mongoose.Promise = Promise;
-
-
-// Make public a static dir
+app.engine("handlebars", hbars({
+  defaultLayout: "main"
+}));
+app.set("view engine", "handlebars");
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://heroku_zz7mxmv9:5327qogkt12k954b0b8vh64fvp@ds133920.mlab.com:33920/heroku_zz7mxmv9");
+const config = require('./config/database');
+// Set mongoose to leverage built in JavaScript ES6 Promises
+mongoose.Promise = Promise;
+mongoose
+  .connect(config.database)
+  .then(result => {
+    console.log(`Connected to database '${result.connections[0].name}' on ${result.connections[0].host}:${result.connections[0].port}`);
+  })
+  .catch(err => console.log('There was an error with your connection:', err));
 
-var db = mongoose.connection;
-
-// Show any mongoose errors
-db.on("error", function (error) {
-  console.log("Mongoose Error: ", error);
-});
-
-// Once logged in to the db through mongoose, log a success message
-db.once("open", function () {
-  console.log("Mongoose connection successful.");
-});
-
-
+// require routes
+// require("./routes/html-routes.js")(app)
+require("./routes/api-routes.js")(app)
 
 
-// Listen on port 3000
-const PORT = process.env.PORT || 3000;
 
+// listen
 app.listen(PORT, function () {
-  console.log("App listening on PORT " + PORT);
+  console.log("App is listening on port: " + PORT);
 });
